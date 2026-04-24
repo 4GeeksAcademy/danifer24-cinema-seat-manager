@@ -2,7 +2,19 @@ type SeatMatrix = number[][];
 
 function initializeSeatMatrix(rows = 8, columns = 10): SeatMatrix {
   // 0 = libre, 1 = ocupado
-  return Array.from({ length: rows }, () => Array(columns).fill(0));
+  const matrix: SeatMatrix = [];
+
+  for (let row = 0; row < rows; row += 1) {
+    const rowSeats: number[] = [];
+
+    for (let column = 0; column < columns; column += 1) {
+      rowSeats.push(0);
+    }
+
+    matrix.push(rowSeats);
+  }
+
+  return matrix;
 }
 
 function printRoomStatus(seats: SeatMatrix): void {
@@ -47,6 +59,23 @@ function reserveSeat(seats: SeatMatrix, rowNumber: number, columnNumber: number)
   return true;
 }
 
+function countSeats(seats: SeatMatrix): string {
+  let free = 0;
+  let occupied = 0;
+
+  seats.forEach((row) => {
+    row.forEach((seat) => {
+      if (seat === 1) {
+        occupied += 1;
+      } else {
+        free += 1;
+      }
+    });
+  });
+
+  return `Asientos libres: ${free} | Asientos ocupados: ${occupied}`;
+}
+
 const seats = initializeSeatMatrix();
 
 printRoomStatus(seats);
@@ -56,10 +85,11 @@ if (typeof window !== "undefined") {
     seats,
     reserveSeat: (rowNumber: number, columnNumber: number) => reserveSeat(seats, rowNumber, columnNumber),
     printRoomStatus: () => printRoomStatus(seats),
+    countSeats: () => countSeats(seats),
   };
 
   Object.assign(window, browserApi);
-  console.log("API disponible en consola: seats, reserveSeat(fila, columna), printRoomStatus()");
+  console.log("API disponible en consola: seats, reserveSeat(fila, columna), printRoomStatus(), countSeats()");
 }
 
-export { initializeSeatMatrix, printRoomStatus, reserveSeat };
+export { initializeSeatMatrix, printRoomStatus, reserveSeat, countSeats };
