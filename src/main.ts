@@ -76,6 +76,23 @@ function countSeats(seats: SeatMatrix): string {
   return `Asientos libres: ${free} | Asientos ocupados: ${occupied}`;
 }
 
+function findTwoContiguousFreeSeats(seats: SeatMatrix): string {
+  for (let rowIndex = 0; rowIndex < seats.length; rowIndex += 1) {
+    const row = seats[rowIndex];
+
+    for (let columnIndex = 0; columnIndex < row.length - 1; columnIndex += 1) {
+      if (row[columnIndex] === 0 && row[columnIndex + 1] === 0) {
+        const firstColumn = columnIndex + 1;
+        const secondColumn = columnIndex + 2;
+        const row = rowIndex + 1;
+        return `En la fila ${row}, están libres los asientos ${firstColumn} y ${secondColumn}.`;
+      }
+    }
+  }
+
+  return "No hay dos asientos contiguos libres en la misma fila.";
+}
+
 const seats = initializeSeatMatrix();
 
 printRoomStatus(seats);
@@ -86,10 +103,13 @@ if (typeof window !== "undefined") {
     reserveSeat: (rowNumber: number, columnNumber: number) => reserveSeat(seats, rowNumber, columnNumber),
     printRoomStatus: () => printRoomStatus(seats),
     countSeats: () => countSeats(seats),
+    findTwoContiguousFreeSeats: () => findTwoContiguousFreeSeats(seats),
   };
 
   Object.assign(window, browserApi);
-  console.log("API disponible en consola: seats, reserveSeat(fila, columna), printRoomStatus(), countSeats()");
+  console.log(
+    "API disponible en consola: seats, reserveSeat(fila, columna), printRoomStatus(), countSeats(), findTwoContiguousFreeSeats()",
+  );
 }
 
-export { initializeSeatMatrix, printRoomStatus, reserveSeat, countSeats };
+export { initializeSeatMatrix, printRoomStatus, reserveSeat, countSeats, findTwoContiguousFreeSeats };
