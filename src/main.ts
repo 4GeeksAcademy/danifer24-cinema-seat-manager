@@ -1,12 +1,12 @@
-if (typeof document !== "undefined") {
-  import("./style.css").then(() => {
-    const app = document.querySelector<HTMLParagraphElement>("#app");
-    if (app) {
-      app.textContent = "If you can see this, Tailwind is working.";
-    }
-  });
+type SeatMatrix = string[][];
+
+function initializeSeatMatrix(rows = 8, columns = 10): SeatMatrix {
+  return Array.from({ length: rows }, () => Array(columns).fill("L"));
 }
 
-console.log("Hello from src/main.ts");
+const seats = initializeSeatMatrix();
 
-export {};
+console.log("Matriz de asientos inicializada (8x10):");
+console.table(seats);
+
+export { initializeSeatMatrix };
