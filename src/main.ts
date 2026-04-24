@@ -23,8 +23,38 @@ function printRoomStatus(seats: SeatMatrix): void {
   });
 }
 
+function reserveSeat(seats: SeatMatrix, rowNumber: number, columnNumber: number): boolean {
+  const rowIndex = rowNumber - 1;
+  const columnIndex = columnNumber - 1;
+
+  if (rowIndex < 0 || rowIndex >= seats.length || columnIndex < 0 || columnIndex >= seats[0].length) {
+    console.log(`Posicion invalida: fila ${rowNumber}, columna ${columnNumber}.`);
+    return false;
+  }
+
+  if (seats[rowIndex][columnIndex] === 1) {
+    console.log(`El asiento fila ${rowNumber}, columna ${columnNumber} ya esta ocupado.`);
+    return false;
+  }
+
+  seats[rowIndex][columnIndex] = 1;
+  console.log(`Asiento reservado: fila ${rowNumber}, columna ${columnNumber}.`);
+  return true;
+}
+
 const seats = initializeSeatMatrix();
 
 printRoomStatus(seats);
 
-export { initializeSeatMatrix, printRoomStatus };
+if (typeof window !== "undefined") {
+  const browserApi = {
+    seats,
+    reserveSeat: (rowNumber: number, columnNumber: number) => reserveSeat(seats, rowNumber, columnNumber),
+    printRoomStatus: () => printRoomStatus(seats),
+  };
+
+  Object.assign(window, browserApi);
+  console.log("API disponible en consola: seats, reserveSeat(fila, columna), printRoomStatus()");
+}
+
+export { initializeSeatMatrix, printRoomStatus, reserveSeat };
